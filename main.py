@@ -225,22 +225,27 @@ def index():
                 fetch('/shuffle', {{ method: 'POST' }}).then(response => response.json())
                     .then(data => console.log("Modo aleatorio actualizado."));
             }}
-            function nextSong() {{
+                        function nextSong() {{
                 fetch('/next')
                     .then(response => response.json())
                     .then(data => {{
                         document.getElementById('current-song').textContent = data.current_song;
+                        const audioPlayer = document.getElementById('audio-player');
                         document.getElementById('audio-source').src = "/play?" + Date.now();
-                        document.getElementById('audio-player').load();
+                        audioPlayer.load();
+                        audioPlayer.play(); // Forzar la reproducción
                     }});
             }}
+
             function selectSong(songNumber) {{
                 fetch(`/select/${{songNumber}}`)
                     .then(response => response.json())
                     .then(data => {{
                         document.getElementById('current-song').textContent = data.current_song;
+                        const audioPlayer = document.getElementById('audio-player');
                         document.getElementById('audio-source').src = "/play?" + Date.now();
-                        document.getElementById('audio-player').load();
+                        audioPlayer.load();
+                        audioPlayer.play(); // Forzar la reproducción
                     }});
             }}
         </script>
@@ -416,11 +421,15 @@ def play():
 def next_song():
     global current_index
 
-    # Avanzar al siguiente índice, o volver al primero si ya estamos en el último
-    current_index = (current_index + 1) % len(songs)
+    if shuffle_mode:
+        # Elegir un índice aleatorio diferente al actual
+        current_index = random.choice([i for i in range(len(songs)) if i != current_index])
+    else:
+        # Avanzar al siguiente índice de forma secuencial
+        current_index = (current_index + 1) % len(songs)
     
-    # Devolver el nombre de la canción actualizada
     return jsonify({'current_song': songs[current_index]})
+
 
 
 
