@@ -1,6 +1,7 @@
 import sqlite3
 from flask import Flask, jsonify, render_template_string, request, send_file, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 import threading
 import os
 import time
@@ -14,6 +15,10 @@ MUSIC_FOLDER = r"D:\General\Music"
 songs = [f for f in os.listdir(MUSIC_FOLDER) if f.endswith(('.mp3', '.m4a'))]
 current_index = 0
 shuffle_mode = False
+UPLOAD_FOLDER = MUSIC_FOLDER  # Carpeta donde se almacenan las canciones subidas
+ALLOWED_EXTENSIONS = {'mp3', 'm4a'}
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Conexión a la base de datos SQLite
 def get_db_connection():
@@ -51,9 +56,76 @@ def validate_user(username, password):
         return True
     return False
 
-# Crear base de datos y agregar un usuario (solo usar una vez)
-# create_user_db()
-# add_user('admin', 'password123')
+# Función para verificar extensiones permitidas
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/upload', methods=['GET', 'POST'])
+def upload_file():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            return "No se envió ningún archivo", 400
+        file = request.files['file']
+        if file.filename == '':
+            return "El archivo no tiene nombre", 400
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            # Actualizar la lista de canciones
+            global songs
+            songs = [f for f in os.listdir(MUSIC_FOLDER) if f.endswith(('.mp3', '.m4a'))]
+            return redirect(url_for('index'))
+    return '''
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Subir Canción</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background: linear-gradient(to right, #1d2671, #c33764);
+                color: #fff;
+                text-align: center;
+                padding: 50px;
+            }
+            form {
+                background-color: rgba(0, 0, 0, 0.6);
+                padding: 20px;
+                border-radius: 8px;
+                display: inline-block;
+                color: white;
+            }
+            input[type="file"], input[type="submit"] {
+                margin: 10px 0;
+                padding: 10px;
+                border-radius: 5px;
+            }
+            input[type="submit"] {
+                background-color: #4caf50;
+                color: white;
+                border: none;
+                cursor: pointer;
+            }
+            input[type="submit"]:hover {
+                background-color: #45a049;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Subir Nueva Canción</h1>
+        <form method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept=".mp3,.m4a" required><br>
+            <input type="submit" value="Subir">
+        </form>
+        <button onclick="window.location.href='/'">Volver</button>
+    </body>
+    </html>
+    '''
 
 def play_music_in_background():
     global current_index
@@ -218,37 +290,81 @@ def index():
             </label>
             <label for="shuffle-toggle">Modo Aleatorio</label>
         </div>
+        <form action="/upload" method="post" enctype="multipart/form-data" style="margin-top: 20px; text-align: center;">
+            <label for="file-upload" style="display: inline-block; background-color: #4caf50; color: white; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer; margin-right: 10px;">
+                Seleccionar archivo
+                <input type="file" id="file-upload" name="file" accept=".mp3,.m4a" style="display: none;" required>
+            </label>
+            <button type="submit" style="background-color: #4caf50; color: white; padding: 10px 20px; font-size: 16px; border: none; border-radius: 5px; cursor: pointer;">
+                Subir Canción
+            </button>
+        </form>
+
         <h2>Lista de Canciones</h2>
         {song_table}
-        <script>
-            function toggleShuffle() {{
-                fetch('/shuffle', {{ method: 'POST' }}).then(response => response.json())
-                    .then(data => console.log("Modo aleatorio actualizado."));
-            }}
-                        function nextSong() {{
-                fetch('/next')
-                    .then(response => response.json())
-                    .then(data => {{
-                        document.getElementById('current-song').textContent = data.current_song;
-                        const audioPlayer = document.getElementById('audio-player');
-                        document.getElementById('audio-source').src = "/play?" + Date.now();
-                        audioPlayer.load();
-                        audioPlayer.play(); // Forzar la reproducción
-                    }});
-            }}
+<script>
+    function toggleShuffle() {{
+        fetch('/shuffle', {{ method: 'POST' }}).then(response => response.json())
+            .then(data => console.log("Modo aleatorio actualizado."));
+    }}
+    
+    function nextSong() {{
+        fetch('/next')
+            .then(response => response.json())
+            .then(data => {{
+                // Actualiza el nombre de la canción actual
+                document.getElementById('current-song').textContent = data.current_song;
+                
+                // Actualiza la lista de canciones
+                const audioPlayer = document.getElementById('audio-player');
+                document.getElementById('audio-source').src = "/play?" + Date.now();
+                audioPlayer.load();
+                audioPlayer.play(); // Forzar la reproducción
 
-            function selectSong(songNumber) {{
-                fetch(`/select/${{songNumber}}`)
-                    .then(response => response.json())
-                    .then(data => {{
-                        document.getElementById('current-song').textContent = data.current_song;
-                        const audioPlayer = document.getElementById('audio-player');
-                        document.getElementById('audio-source').src = "/play?" + Date.now();
-                        audioPlayer.load();
-                        audioPlayer.play(); // Forzar la reproducción
-                    }});
-            }}
-        </script>
+                // Actualizamos la visualización de la lista de canciones (resaltar la actual)
+                const songs = document.querySelectorAll('ul li');
+                songs.forEach(function(song) {{
+                    const songText = song.textContent.trim();
+                    if (songText === data.current_song) {{
+                        song.style.backgroundColor = '#4caf50';  // Resaltamos la canción actual
+                        song.style.color = '#fff';  // Aseguramos que el texto sea blanco
+                    }} else {{
+                        song.style.backgroundColor = '#f9f9f9';  // Vuelve al color normal para las demás
+                        song.style.color = '#333';  // Aseguramos el color para las canciones no actuales
+                    }}
+                }});
+            }});
+    }}
+
+    function selectSong(songNumber) {{
+        fetch(`/select/${{songNumber}}`)
+            .then(response => response.json())
+            .then(data => {{
+                // Actualiza el nombre de la canción actual
+                document.getElementById('current-song').textContent = data.current_song;
+
+                // Actualiza la lista de canciones
+                const audioPlayer = document.getElementById('audio-player');
+                document.getElementById('audio-source').src = "/play?" + Date.now();
+                audioPlayer.load();
+                audioPlayer.play(); // Forzar la reproducción
+
+                // Actualizamos la visualización de la lista de canciones (resaltar la actual)
+                const songs = document.querySelectorAll('ul li');
+                songs.forEach(function(song) {{
+                    const songText = song.textContent.trim();
+                    if (songText === data.current_song) {{
+                        song.style.backgroundColor = '#4caf50';  // Resaltamos la canción actual
+                        song.style.color = '#fff';  // Aseguramos que el texto sea blanco
+                    }} else {{
+                        song.style.backgroundColor = '#f9f9f9';  // Vuelve al color normal para las demás
+                        song.style.color = '#333';  // Aseguramos el color para las canciones no actuales
+                    }}
+                }});
+            }});
+    }}
+</script>
+
     </body>
     </html>
     """
