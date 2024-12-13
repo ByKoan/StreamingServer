@@ -8,12 +8,13 @@ import time
 import random
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)  # Clave secreta para manejar sesiones
+app.secret_key = os.urandom(512)  # Clave secreta para manejar sesiones
 
 # Ruta de la carpeta de música
 MUSIC_FOLDER = r"D:\General\Music" # - Windows
 #MUSIC_FOLDER = "/home/koan/Desktop/music/" # - Linux
-songs = [f for f in os.listdir(MUSIC_FOLDER) if f.endswith(('.mp3', '.m4a'))]
+
+songs = [f for f in os.listdir(MUSIC_FOLDER) if f.endswith(('.mp3', '.m4a', '.wav'))]
 current_index = 0
 shuffle_mode = False
 UPLOAD_FOLDER = MUSIC_FOLDER  # Carpeta donde se almacenan las canciones subidas
@@ -104,7 +105,71 @@ def index():
 
     global current_index
     if not songs:
-        return "No hay canciones disponibles en la carpeta.", 404
+        return """
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>No hay canciones disponibles</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        background: linear-gradient(to right, #1d2671, #c33764);
+                        color: #fff;
+                        text-align: center;
+                        padding: 20px;
+                        margin: 0;
+                    }
+                    h1 {
+                        font-size: 40px;
+                        margin-bottom: 20px;
+                    }
+                    p {
+                        font-size: 20px;
+                        color: #ff4c4c;
+                    }
+                    .info-box {
+                        background-color: rgba(0, 0, 0, 0.6);
+                        padding: 20px;
+                        border-radius: 8px;
+                        display: inline-block;
+                        margin-top: 30px;
+                    }
+                    .info-box h2 {
+                        font-size: 24px;
+                        color: #4caf50;
+                    }
+                    .info-box p {
+                        font-size: 18px;
+                        color: #fff;
+                    }
+                    .logout {
+                        position: absolute;
+                        top: 20px;
+                        right: 20px;
+                        background-color: #ff4c4c;
+                        color: white;
+                        font-size: 14px;
+                        padding: 10px 15px;
+                        border: none;
+                        border-radius: 5px;
+                        cursor: pointer;
+                    }
+                    .logout:hover {
+                        background-color: #e43f3f;
+                    }
+                </style>
+            </head>
+            <body>
+                <button class="logout" onclick="window.location.href='/logout'">Cerrar sesión</button>
+                <h1>No hay canciones disponibles</h1>
+                <div class="info-box">
+                    <h2>Selecciona la carpeta desde el programa</h2>
+                    <p>Por favor selecciona la carpeta donde están ubicados tus archivos de música desde el programa y vuelve a cargar la página para comenzar a reproducir canciones.</p>
+                </div>
+            </body>
+            </html>
+        """
 
     song_table = "<ul style='list-style: none; padding: 0;'>"
     for i, song in enumerate(songs):
