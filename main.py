@@ -11,8 +11,8 @@ app = Flask(__name__)
 app.secret_key = os.urandom(512)  # Clave secreta para manejar sesiones
 
 # Ruta de la carpeta de música
-MUSIC_FOLDER = r"D:\General\Music" # - Windows
-#MUSIC_FOLDER = "/home/koan/Desktop/music/" # - Linux
+#MUSIC_FOLDER = r"your root" # - Windows
+#MUSIC_FOLDER = "your root" # - Linux
 
 songs = [f for f in os.listdir(MUSIC_FOLDER) if f.endswith(('.mp3', '.m4a', '.wav'))]
 current_index = 0
@@ -388,9 +388,6 @@ def index():
     """
     return render_template_string(html)
 
-
-
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -538,9 +535,7 @@ def login():
         </body>
         </html>
     '''
-
-
-
+    
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)  # Elimina el usuario de la sesión
@@ -563,9 +558,6 @@ def next_song():
         current_index = (current_index + 1) % len(songs)
     
     return jsonify({'current_song': songs[current_index]})
-
-
-
 
 @app.route('/select/<int:song_number>')
 def select_song(song_number):
