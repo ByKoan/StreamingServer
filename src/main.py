@@ -14,11 +14,11 @@ app.secret_key = os.urandom(512)  # Clave secreta para manejar sesiones
 # MUSIC_FOLDER = r"Put here your root" # - Windows
 # MUSIC_FOLDER = "Put here your root" # - Linux
 
-songs = [f for f in os.listdir(MUSIC_FOLDER) if f.endswith(('.mp3', '.m4a', '.wav'))]
+songs = [f for f in os.listdir(MUSIC_FOLDER) if f.endswith(('.mp3', '.m4a', '.wav', '.aiff' , '.pcm', '.bwf' , '.aac', '.ogg', '.wma', '.amr', '.opus'))]
 current_index = 0
 shuffle_mode = False
 UPLOAD_FOLDER = MUSIC_FOLDER  # Carpeta donde se almacenan las canciones subidas
-ALLOWED_EXTENSIONS = {'mp3', 'm4a'}
+ALLOWED_EXTENSIONS = {'mp3', 'm4a', 'wav', 'aiff' , 'pcm', 'bwf' , 'aac', 'ogg', 'wma', 'amr', 'opus' }
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
