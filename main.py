@@ -11,8 +11,8 @@ app = Flask(__name__)
 app.secret_key = os.urandom(512)  # Clave secreta para manejar sesiones
 
 # Ruta de la carpeta de música
-#MUSIC_FOLDER = r"your root" # - Windows
-#MUSIC_FOLDER = "your root" # - Linux
+# MUSIC_FOLDER = r"Put here your root" # - Windows
+# MUSIC_FOLDER = "Put here your root" # - Linux
 
 songs = [f for f in os.listdir(MUSIC_FOLDER) if f.endswith(('.mp3', '.m4a', '.wav'))]
 current_index = 0
