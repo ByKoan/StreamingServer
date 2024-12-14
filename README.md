@@ -1,6 +1,6 @@
 # Python Streaming Server
 ***Python music streaming server***
-- **Libs used: flask (html server) sqlite3 (database) and werkzeug.security for password of database
+- **Libs used: flask (html server) sqlite3 (database) and werkzeug.security for password of database**
 
 ***Functions of the server:***
 - Bassically it is a server that stream music of download files on the root you selected (You need to do it before run it)
