@@ -1,2 +1,4 @@
 users.db
 .vscode
+__pycache__
+conf
