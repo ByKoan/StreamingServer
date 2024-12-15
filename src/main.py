@@ -106,7 +106,7 @@ class StreamingApp:
 
 
 def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'mp3', 'm4a', 'wav'}
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in  {'mp3', 'm4a', 'wav', 'aiff' , 'pcm', 'bwf' , 'aac', 'ogg', 'wma', 'amr', 'opus' }
 
 def main(music_folder, port=80):
     app = StreamingApp(music_folder, port)

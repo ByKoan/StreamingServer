@@ -4,8 +4,7 @@ function toggleShuffle() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    const allowedExtensions = ['mp3', 'm4a', 'wav'];
-
+    const allowedExtensions = ['mp3', 'm4a', 'wav', 'aiff' , 'pcm', 'bwf' , 'aac', 'ogg', 'wma', 'amr', 'opus'];
     document.getElementById('file-upload-form').addEventListener('submit', function (event) {
         const fileInput = document.getElementById('file');
         const errorMessage = document.getElementById('error-message');
