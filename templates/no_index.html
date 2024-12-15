@@ -1,0 +1,17 @@
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>No hay canciones disponibles</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='no_index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='global.css') }}">
+    </head>
+    <body>
+        <button class="logout" onclick="window.location.href='/logout'">Cerrar sesión</button>
+        <h1>No hay canciones disponibles</h1>
+        <div class="info-box">
+            <h2>Selecciona la carpeta desde el programa</h2>
+            <p>Por favor selecciona la carpeta donde están ubicados tus archivos de música desde el programa y vuelve a cargar la página para comenzar a reproducir canciones.</p>
+        </div>
+    </body>
+</html>
