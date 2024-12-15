@@ -1,0 +1,25 @@
+
+h1 {
+    font-size: 40px;
+    margin-bottom: 20px;
+}
+p {
+    font-size: 20px;
+    color: #ff4c4c;
+}
+.info-box {
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 20px;
+    border-radius: 8px;
+    display: inline-block;
+    margin-top: 30px;
+}
+.info-box h2 {
+    font-size: 24px;
+    color: #4caf50;
+}
+.info-box p {
+    font-size: 18px;
+    color: #fff;
+}
+

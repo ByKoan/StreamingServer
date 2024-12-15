@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Streaming Server</title>
+    <script src="{{ url_for('static', filename='index.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='global.css') }}">
+</head>
+<body>
+    <button class="logout" onclick="window.location.href='/logout'">Cerrar sesión</button>
+    <h1>Servidor Streaming</h1>
+    <audio id="audio-player" controls onended="nextSong()">
+        <source id="audio-source" src="/play?{{ play_url }}" type="audio/mpeg">
+        Tu navegador no soporta el elemento de audio.
+    </audio>
+    <p>Canción actual: <strong id="current-song">{{song_now|safe}}</strong></p>
+    <button onclick="nextSong()">Siguiente Canción</button>
+    <div class="toggle">
+        <label class="switch">
+            <input type="checkbox" id="shuffle-toggle" onchange="toggleShuffle()">
+            <span class="slider"></span>
+        </label>
+        <label for="shuffle-toggle">Modo Aleatorio</label>
+    </div>
+    <form action="/upload" id="file-upload-form" method="post" enctype="multipart/form-data">
+        <label for="file" id="file-label">Seleccionar archivo
+            <input type="file" id="file" name="file" required>
+        </label>
+        <button type="submit" id="upload-button" >Subir Canción</button>
+    </form>
+    <div id="error-message" style="color: red; display: none;"></div>
+
+
+    <h2>Lista de Canciones</h2>
+<!-- |safe asegura que el codigo html se trate como tal -->
+    {{song_table|safe}}
+</body>
+</html>
