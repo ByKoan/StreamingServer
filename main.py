@@ -31,7 +31,7 @@ class LoadConfig:
 
         if not exists(join(self.path, self.name_file)):
             with open(join(self.path, self.name_file), "w") as file:
-                file.write(dumps(data, indent=4, ensure_ascii=False))
+                file.write(dumps(self.data, indent=4, ensure_ascii=False))
 
 if __name__ == '__main__':
     load_config = LoadConfig("config.conf")
