@@ -1,0 +1,122 @@
+h1 {
+    margin-bottom: 10px;
+}
+
+audio {
+    margin: 20px auto;
+    display: block;
+    width: 80%;
+    max-width: 600px;
+}
+
+button {
+    background-color: #4caf50;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+
+
+ul {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 0;
+}
+
+ul li:hover {
+    background-color: #ddd;
+    color: #000;
+}
+
+.toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.toggle label {
+    margin-left: 10px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+}
+
+.switch input {
+    display: none;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 20px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked+.slider {
+    background-color: #4caf50;
+}
+
+input:checked+.slider:before {
+    transform: translateX(20px);
+}
+
+#file-label {
+    display: inline-block;
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+#file {
+    display: none;
+}
+
+#upload-button {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}

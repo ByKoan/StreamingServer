@@ -1,0 +1,25 @@
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #1d2671, #c33764);
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+    margin: 0;
+}
+
+.logout {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #ff4c4c;
+    color: white;
+    font-size: 14px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.logout:hover {
+    background-color: #e43f3f;
+}
