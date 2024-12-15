@@ -7,8 +7,6 @@ from os                 import urandom
 
 from .UserManager        import UserManager
 from .MusicPlayer        import MusicPlayer
-
-
 class StreamingApp:
     def __init__(self, music_folder, port=80):
         self.music_player = MusicPlayer(music_folder)
@@ -18,7 +16,7 @@ class StreamingApp:
         self.app.secret_key = urandom(512)
         self.app.config['UPLOAD_FOLDER'] = music_folder
         self.setup_routes()
-
+        
     def setup_routes(self):
         @self.app.route('/')
         def index():

@@ -11,3 +11,6 @@
 pip install pyinstaller 
 pyinstaller --name StreamingServer --onefile --hidden-import flask --noconsole main.py
 ```
+
+### File "scriptsql.py"
+***With this file you can manage the database***
