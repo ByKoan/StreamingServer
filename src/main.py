@@ -81,6 +81,13 @@ class StreamingApp:
 
             song_path = join(self.music_player.music_folder, self.music_player.songs[self.music_player.current_index])
             return send_file(song_path, mimetype='audio/mpeg')
+        
+        @self.app.route('/prev', methods=['GET'])
+        def previous_song():
+            if not self.music_player.songs:
+                return jsonify({'error': 'No hay canciones disponibles'}), 404
+            current_song = self.music_player.previous_song()
+            return jsonify({'current_song': current_song})
 
         @self.app.route('/next')
         def next_song():

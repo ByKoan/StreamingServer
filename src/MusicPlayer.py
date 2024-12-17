@@ -12,6 +12,11 @@ class MusicPlayer:
     def load_songs(self):
         self.songs = [f for f in listdir(self.music_folder) if f.endswith(('.mp3', '.m4a', '.wav'))]
 
+    def previous_song(self):
+        # Retroceder al índice anterior, volviendo al final si estamos en la primera canción
+        self.current_index = (self.current_index - 1) % len(self.songs)
+        return self.songs[self.current_index]
+
     def next_song(self):
         if self.shuffle_mode:
             self.current_index = choice([i for i in range(len(self.songs)) if i != self.current_index])

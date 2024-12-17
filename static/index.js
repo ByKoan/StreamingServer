@@ -37,7 +37,27 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
+function prevSong() {
+    fetch('/prev')
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                console.error(data.error);
+                alert("Error: " + data.error);
+                return;
+            }
 
+            // Actualiza el nombre de la canción actual
+            document.getElementById('current-song').textContent = data.current_song;
+
+            // Actualiza el reproductor de audio
+            const audioPlayer = document.getElementById('audio-player');
+            document.getElementById('audio-source').src = "/play?" + Date.now(); // Cache busting
+            audioPlayer.load();
+            audioPlayer.play();
+        })
+        .catch(error => console.error('Error al obtener la canción anterior:', error));
+}
 
 function nextSong() {
     fetch('/next')
